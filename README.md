@@ -23,3 +23,49 @@ flowchart TB
         end
     end
 ```
+
+## Class Design
+
+<!-- TODO: Add Text Here -->
+```mermaid
+---
+title: p5.viz classes
+---
+classDiagram
+    class Shape {
+        - p5 p
+        + boolean highlighted
+        + boolean hidden
+        + draw()
+    }
+
+    note for Shape "Properties are of two kinds. Contructional and Rendering Type. "
+
+    namespace p5.wrapper {
+        class Circle {
+            + elipseMode
+            + x
+            + y
+            + d
+        }
+
+        class Text {
+            + text
+            + x
+            + y
+            + maxWidth?
+            + maxHeight?
+        }
+
+    }
+
+    class Node {
+    }
+
+    Shape <|-- Circle
+    Shape <|-- Node
+
+    Circle *-- Node
+    Text *-- Node
+
+```
