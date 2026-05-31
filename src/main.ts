@@ -1,11 +1,11 @@
 import p5 from 'p5';
 
 import './style.css';
+import { Node } from './foundational/node';
 
 // Define the sketch using a p5 instance parameter
 const sketch = (p: p5) => {
-  let x = 0;
-  let y = 0;
+  let toggle = false;
 
   p.setup = () => {
     p.createCanvas(p.windowWidth, p.windowHeight);
@@ -13,15 +13,24 @@ const sketch = (p: p5) => {
   };
 
   p.draw = () => {
-    p.background(220);
-    p.fill(255, 0, 0);
+    p.background(0);
+    // p.fill(255, 0, 0);
 
-    p.circle(x, y, 50);
+    // p.circle(p.windowWidth/2, p.windowHeight/2, 50);
 
-    // Simple animation
-    x = (x + 1) % p.windowWidth;
-    y = (y + 1) % p.windowHeight;
+    const node: Node = new Node(p, 4, {x: p.windowWidth/2, y: p.windowHeight/2, diameter: 50}, false, true);
+    node.hidden = toggle;
+
+    // node.circleParams = {
+    //   x: p.mouseX,
+    //   y: node.circleParams.y,
+    //   diameter: node.circleParams.diameter
+    // };
   };
+
+  p.mouseClicked = () => {
+    toggle = !toggle;
+  }
 
   p.windowResized = () => {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
