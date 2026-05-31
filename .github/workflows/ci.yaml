@@ -3,7 +3,7 @@ name: p5.viz CI
 on:
   pull_request:
     branches: ["main"]
-    types: [opened, synchronize, reopen]
+    types: [opened, synchronize, reopened]
 
 jobs:
   central-validation:
@@ -16,4 +16,4 @@ jobs:
           node-version: "22"
       - name: Lint UI
         shell: bash
-        run: npm ci && npm run Lint
+        run: npm ci && npm run lint
