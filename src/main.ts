@@ -1,7 +1,7 @@
 import p5 from 'p5';
 
 import './style.css';
-import { Node } from './foundational/node';
+import { Node } from './';
 
 // Define the sketch using a p5 instance parameter
 const sketch = (p: p5) => {
