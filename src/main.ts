@@ -23,7 +23,6 @@ const sketch = (p: p5) => {
     y = (y + 1) % p.windowHeight;
   };
 
-
   p.windowResized = () => {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
   }
