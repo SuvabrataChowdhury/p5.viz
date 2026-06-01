@@ -3,10 +3,12 @@ import p5 from 'p5';
 import './style.css';
 import { Node } from './';
 import { Circle } from './wrapper/circle';
+import { Text } from './wrapper/text';
 
 // Define the sketch using a p5 instance parameter
 const sketch = (p: p5) => {
   let toggle = false;
+  let numClicks = 0;
 
   p.setup = () => {
     p.createCanvas(p.windowWidth, p.windowHeight);
@@ -14,7 +16,7 @@ const sketch = (p: p5) => {
   };
 
   p.draw = () => {
-    p.background(0);
+    p.background(255);
     // p.fill(255, 0, 0);
 
     // p.circle(p.windowWidth/2, p.windowHeight/2, 50);
@@ -28,12 +30,15 @@ const sketch = (p: p5) => {
     //   diameter: node.circleParams.diameter
     // };
 
-    new Circle({p: p, x: p.mouseX, y: p.mouseY, d: 50});
+    new Circle({p: p, x: p.mouseX, y: p.mouseY, d: 50, isHidden: !toggle});
+
+    new Text({p: p, text: "ABC", x: 100, y: 100, textSize: numClicks});
     // myCircle.draw();
   };
 
   p.mouseClicked = () => {
     toggle = !toggle;
+    numClicks = 1 + numClicks;
   }
 
   p.windowResized = () => {
