@@ -2,6 +2,7 @@ import p5 from 'p5';
 
 import './style.css';
 import { Node } from './';
+import { Circle } from './wrapper/circle';
 
 // Define the sketch using a p5 instance parameter
 const sketch = (p: p5) => {
@@ -26,6 +27,9 @@ const sketch = (p: p5) => {
     //   y: node.circleParams.y,
     //   diameter: node.circleParams.diameter
     // };
+
+    new Circle({p: p, x: p.mouseX, y: p.mouseY, d: 50});
+    // myCircle.draw();
   };
 
   p.mouseClicked = () => {

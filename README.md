@@ -32,7 +32,7 @@ flowchart TB
 title: p5.viz classes
 ---
 classDiagram
-    class Shape {
+    class Shape <<abstract>> {
         - p5 p
         + boolean highlighted
         + boolean hidden
