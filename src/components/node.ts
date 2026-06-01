@@ -1,122 +1,84 @@
-import p5 from 'p5';
+import { Circle, Text} from '../wrapper';
+import { Shape, type ShapeProps } from '../base';
 
-interface CircleParams {
+interface NodeProps extends ShapeProps{
     x: number,
     y: number,
-    diameter: number
-}
+    d: number,
 
-export class Node {
-    private p: p5;
+    text: string
+};
 
-    private _text: string | number;
-    private _circleParams: CircleParams;
-    private _highlighted: boolean;
-    private _hidden: boolean;
+export class Node extends Shape{
 
-    constructor(p: p5, text: string | number, circleParams: CircleParams, highlighted = false, hidden = true) {
-        this.p = p;
+    private _x: number;
+    private _y: number;
+    private _d: number;
 
-        this._text = text;
-        this._circleParams = circleParams;
+    private _label: string;
 
-        this._highlighted = highlighted;
-        this._hidden = hidden;
+    private circle: Circle;
+    private text: Text;
 
-        if (!this._hidden) {
-            this.draw();
-        }
+    constructor({x, y, d, text, ...shapeProps}: NodeProps) {
+        super(shapeProps);
+
+        this._x = x;
+        this._y = y;
+        this._d = d;
+
+        this._label = text;
+
+        this.circle = new Circle({x: this._x, y: this._y, d: this._d, ...shapeProps});
+        this.text = new Text({text: this._label, x: this._x, y: this._y, textSize: this._d / 2, alignment: {hAlign: this.p.CENTER, vAlign: this.p.CENTER}, ...shapeProps});
     }
 
-    get text() {
-        return this._text;
+    get x() {
+        return this._x;
     }
 
-    set text(text) {
-        this._text = text;
+    set x(x: number) {
+        this._x = x;
 
-        if (!this.hidden) {
-            this.draw();
-        }
+        // this.conditionalDraw();
+        this.circle.x = x;
+        this.text.x = x;
     }
 
-    // get x(): number {
-    //     return this._circleParams.x;
-    // }
-
-    // get y(): number {
-    //     return this._circleParams.y;
-    // }
-
-    get circleParams(): CircleParams {
-        return this._circleParams;
+    get y() {
+        return this._y;
     }
 
-    set circleParams(circleParams: CircleParams) {
-        this._circleParams = circleParams;
+    set y(y: number) {
+        this._y = y;
 
-        if (!this.hidden) {
-            this.draw();
-        }
+        this.circle.y = y;
+        this.text.y = y;
     }
 
-    get highlighted() {
-        return this._highlighted;
+    get d() {
+        return this._d;
     }
 
-    set highlighted (highlighted) {
-        this._highlighted = highlighted;
+    set d(d: number) {
+        this._d = d;
 
-        if (!this.hidden) {
-            this.draw();
-        }
+        this.circle.d = d;
+        this.text.textSize = d/2;
     }
 
-    get hidden(): boolean {
-        return this._hidden;
+    get label() {
+        return this._label;
     }
 
-    set hidden(hidden: boolean) {
-        this._hidden = hidden;
+    set label(label: string) {
+        this.label = label;
 
-        if(!this.hidden) {
-            this.draw();
-        }
+        this.text.text = label
     }
 
-    private draw = () => {
-        this._hidden = false;
-
-        this._drawCircle();
-        this._drawText();
-    }
-
-    _drawCircle = () => {
-        this.p.push();
-
-        if (this.highlighted) {
-            this.p.stroke(50, 200, 0);
-            this.p.strokeWeight(10);
-        }
-
-        this.p.circle(this.circleParams.x, this.circleParams.y, this.circleParams.diameter);
-
-        this.p.pop();
-    }
-
-    _drawText = () => {
-        this.p.push();
-
-        if (this.highlighted) {
-            // this.p.strokeWeight(3);
-            this.p.strokeWeight(5);
-            this.p.fill(0, 250, 20);
-        }
-
-        this.p.textAlign(this.p.CENTER, this.p.CENTER);
-        this.p.textSize(this.circleParams.diameter / 2);
-        this.p.text(this.text, this.circleParams.x, this.circleParams.y);
-
-        this.p.pop();
+    public draw = () => {
+        this.circle.draw();
+        this.text.draw();
     }
 }

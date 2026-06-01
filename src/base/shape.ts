@@ -31,6 +31,7 @@ export abstract class Shape {
         return this._isHidden;
     }
 
+    // TODO: Does not cover all the cases
     set isHidden(isHidden: boolean) {
         this._isHidden = isHidden;
 

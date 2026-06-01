@@ -1,6 +1,6 @@
 import { Shape, type ShapeProps } from '../base';
 
-interface CircleProps extends ShapeProps {
+export interface CircleProps extends ShapeProps {
     ellipseMode?: "center" | "radius" | "corner" | "corners",
     x: number,
     y: number,
@@ -59,6 +59,16 @@ export class Circle extends Shape {
 
     set y(y: number){
         this._y = y;
+
+        this.conditionalDraw();
+    }
+
+    get d() {
+        return this._d;
+    }
+
+    set d(d: number) {
+        this._d = d;
 
         this.conditionalDraw();
     }

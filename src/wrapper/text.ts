@@ -5,7 +5,7 @@ interface TextAlign {
     vAlign: "top" | "center" | "bottom" | "alphabetic"
 }
 
-interface TextProps extends ShapeProps {
+export interface TextProps extends ShapeProps {
     text: string,
     x: number,
     y: number,

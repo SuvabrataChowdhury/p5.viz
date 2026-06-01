@@ -21,8 +21,8 @@ const sketch = (p: p5) => {
 
     // p.circle(p.windowWidth/2, p.windowHeight/2, 50);
 
-    const node: Node = new Node(p, 4, {x: p.windowWidth/2, y: p.windowHeight/2, diameter: 50}, false, true);
-    node.hidden = toggle;
+    const node: Node = new Node({p, x: p.windowWidth/2, y: p.windowHeight/2, d: 50, text: "X"});
+    node.isHidden = toggle;
 
     // node.circleParams = {
     //   x: p.mouseX,
