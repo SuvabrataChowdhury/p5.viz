@@ -26,17 +26,17 @@ const sketch = (p: p5) => {
     // x = p.windowWidth/2;
     // y = p.windowHeight/2;
 
-    let frameOffset = 0;
-    queueFrame(() => {
+    // let frameOffset = 0;
+    // queueFrame(() => {
 
-      const currentFrame = p.frameCount - frameOffset;
+    //   const currentFrame = p.frameCount - frameOffset;
 
-      if(p.mouseIsPressed) {
-        frameOffset = p.frameCount;
-      }
+    //   if(p.mouseIsPressed) {
+    //     frameOffset = p.frameCount;
+    //   }
 
-      p.circle(p.mouseX, p.mouseY, Math.min(200, currentFrame));
-    });
+    //   p.circle(p.mouseX, p.mouseY, Math.min(200, currentFrame));
+    // });
   };
 
   p.draw = () => {
@@ -48,6 +48,20 @@ const sketch = (p: p5) => {
 
   p.windowResized = () => {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
+  }
+
+  p.mouseClicked = () => {
+    const clickedFrame = p.frameCount;
+    const mouseX = p.mouseX;
+    const mouseY = p.mouseY;
+
+    const maxRadius = p.random(50, 250);
+
+    queueFrame(() => {
+      const currentFrame = p.frameCount - clickedFrame;
+     
+      p.circle(mouseX, mouseY, Math.min(maxRadius, currentFrame)); 
+    });
   }
 };
 
