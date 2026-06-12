@@ -5,7 +5,7 @@ import './style.css';
 let animations = [];
 
 function frame() {
-  for(const animation of animations) {
+  for (const animation of animations) {
     animation();
   }
 };
@@ -14,35 +14,35 @@ function queueFrame(frame) {
   animations.push(frame);
 }
 
+
 // Define the sketch using a p5 instance parameter
 const sketch = (p: p5) => {
   // let x = 0;
   // let y = 0;
 
+  function dynamicCircle(frameCount, x, y, d) {
+    const callBack = () => {
+
+      const currentFrame = p.frameCount - frameCount;
+
+      p.circle(x, y, Math.min(d, currentFrame));
+    }
+
+    return callBack;
+  }
+
   p.setup = () => {
     p.createCanvas(p.windowWidth, p.windowHeight);
-    // p.background(220);
-    
-    // x = p.windowWidth/2;
-    // y = p.windowHeight/2;
-
-    // let frameOffset = 0;
-    // queueFrame(() => {
-
-    //   const currentFrame = p.frameCount - frameOffset;
-
-    //   if(p.mouseIsPressed) {
-    //     frameOffset = p.frameCount;
-    //   }
-
-    //   p.circle(p.mouseX, p.mouseY, Math.min(200, currentFrame));
-    // });
+    queueFrame(() => {
+      p.circle(p.mouseX, p.mouseY, 10);
+    })
   };
 
   p.draw = () => {
     p.background(220);
     p.fill(255, 0, 0);
-    
+    p.noStroke();
+
     frame();
   };
 
@@ -51,17 +51,7 @@ const sketch = (p: p5) => {
   }
 
   p.mouseClicked = () => {
-    const clickedFrame = p.frameCount;
-    const mouseX = p.mouseX;
-    const mouseY = p.mouseY;
-
-    const maxRadius = p.random(50, 250);
-
-    queueFrame(() => {
-      const currentFrame = p.frameCount - clickedFrame;
-     
-      p.circle(mouseX, mouseY, Math.min(maxRadius, currentFrame)); 
-    });
+    queueFrame(dynamicCircle(p.frameCount, p.mouseX, p.mouseY, p.random(50, 250)));
   }
 };
 

@@ -109,6 +109,32 @@ flowchart TB
     queueCallback -- stores into --> p5Callbacks
     draw -- calls --> frame
     frame -- calls all --> p5Callbacks
-    p5NativeFn -- constructs --> dynamicShape
+    p5NativeFn -- calls --> dynamicShape
     p5NativeFn -- calls --> queueCallback
 ```
+
+## Implementation plans
+**core:**
+```ts
+type AnimationParams {
+    firstFrameCount: number,
+    
+    // ...
+};
+type P5Callback = (p: p5, currentFrameCount: number) => void;
+type DynamicShape = (shapeParams: object, animationParams: AnimationParams) => P5Callback;
+
+// ...
+
+callbacks: P5Callback[] = [];
+function queueCallback(callback: P5Callback): void {
+    callbacks.push(callback);
+}
+
+function frame(currentFrameCount: number): void {
+    for (callback of callbacks) {
+        callback(p, currentFrameCount);
+    }
+}
+```
+
