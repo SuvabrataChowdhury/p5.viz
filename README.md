@@ -88,7 +88,7 @@ flowchart TB
         direction LR
         p5NativeFn["p5 Native Functions"]
         draw["draw()"]
-        frameCount["frameCount"]
+        p["p"]
     end
     subgraph library["p5.viz Library"]
         subgraph core["core"]
@@ -99,7 +99,10 @@ flowchart TB
             callbacks(["In Memory store"])
             queueCallback["queueCallback()"]
             frame["frame()"]
-            transform["transform()"]
+
+            subgraph animation["animation"]
+                transform["transform()"]
+            end
         end
 
         shape["Shape"]
@@ -108,7 +111,7 @@ flowchart TB
     animationParams -- goes into --> dynamicShape & transform
     transform -- returns --> shapeParams
     dynamicShape -- returns --> p5Callback
-    frameCount -- goes into --> p5Callback & frame
+    p -- goes into --> p5Callback & frame & transform
     p5Callback -- draws --> shape
     p5Callback -- goes into --> queueCallback
     p5Callback -- calls --> transform
@@ -117,7 +120,6 @@ flowchart TB
     frame -- calls all --> callbacks
     p5NativeFn -- calls --> dynamicShape
     p5NativeFn -- calls --> queueCallback
-
 ```
 
 ## Implementation plans
@@ -125,9 +127,10 @@ flowchart TB
 ```ts
 type AnimationParams = {
     firstFrameCount: number,
-    
+
     // ...
 };
+
 type P5Callback = (p: p5, currentFrameCount: number) => void;
 type DynamicShape = (shapeParams: object, animationParams: AnimationParams) => P5Callback;
 

@@ -1,7 +1,7 @@
 import p5 from 'p5';
 
 import './style.css';
-import { dynamicCircle } from './shapes';
+import { dynamicCircle, growCircle } from './shapes';
 import { frame, queueCallback } from './core';
 
 // Define the sketch using a p5 instance parameter
@@ -22,11 +22,13 @@ const sketch = (p: p5) => {
 
   p.windowResized = () => {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
-  }
+  };
 
-  p.mouseClicked = () => {
-    queueCallback(dynamicCircle( {x: p.mouseX, y: p.mouseY, d: p.random(50, 250)}, {firstFrameCount: p.frameCount}));
-  }
+  p.mousePressed = () => {
+    const circleParams = {x: p.mouseX, y: p.mouseY, d: p.random(50, 250)};
+    const circle = dynamicCircle( circleParams, {firstFrameCount: p.frameCount, shapeAnimation: growCircle});
+    queueCallback(circle);
+  };
 };
 
 // Instantiate the sketch and attach it to a DOM element

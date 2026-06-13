@@ -1,5 +1,5 @@
 import p5 from 'p5';
-import type { AnimationParams, DynamicShape, P5Callback, ShapeParams } from "../core";
+import type { AnimationParams, DynamicShape, P5Callback, ShapeAnimation, ShapeParams } from "../core";
 
 interface CircleParams extends ShapeParams {
     x: number,
@@ -7,14 +7,27 @@ interface CircleParams extends ShapeParams {
     d: number
 };
 
-const dynamicCircle: DynamicShape<CircleParams> = (shapeParams: CircleParams, animationParams: AnimationParams): P5Callback => {
+const growCircle: ShapeAnimation<CircleParams> = (shapeParams: CircleParams, currentFrame: number): CircleParams => {
+
+    // const currentRelativeFrame = p.frameCount - animationParams.firstFrameCount;
+
+    const { x, y, d } = shapeParams;
+
+    return {
+        x,
+        y,
+        d: Math.min(d, currentFrame) 
+    };
+}
+
+const dynamicCircle: DynamicShape<CircleParams> = (shapeParams: CircleParams, animationParams: AnimationParams<CircleParams>): P5Callback => {
     return (p: p5) => {
         const currentRelativeFrame = p.frameCount - animationParams.firstFrameCount;
 
-        const {x, y, d} = shapeParams;
+        const { x, y, d } = animationParams.shapeAnimation(shapeParams, currentRelativeFrame);
 
-        p.circle(x, y, Math.min(d, currentRelativeFrame));
+        p.circle(x, y, d);
     }
 }
 
-export {dynamicCircle, type CircleParams};
+export { dynamicCircle, growCircle, type CircleParams };
