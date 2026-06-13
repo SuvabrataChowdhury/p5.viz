@@ -1,5 +1,6 @@
 import p5 from 'p5';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface ShapeParams {};
 
 type ShapeAnimation<T extends ShapeParams> = (shapeParams: T, currentFrame: number) => T;
