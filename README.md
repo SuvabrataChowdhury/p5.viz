@@ -99,21 +99,25 @@ flowchart TB
             callbacks(["In Memory store"])
             queueCallback["queueCallback()"]
             frame["frame()"]
+            transform["transform()"]
         end
 
         shape["Shape"]
     end
-    shapeParams -- goes into --> dynamicShape
-    animationParams -- goes into --> dynamicShape
+    shapeParams -- goes into --> dynamicShape & transform
+    animationParams -- goes into --> dynamicShape & transform
+    transform -- returns --> shapeParams
     dynamicShape -- returns --> p5Callback
     frameCount -- goes into --> p5Callback & frame
     p5Callback -- draws --> shape
     p5Callback -- goes into --> queueCallback
+    p5Callback -- calls --> transform
     queueCallback -- stores into --> callbacks
     draw -- calls --> frame
     frame -- calls all --> callbacks
     p5NativeFn -- calls --> dynamicShape
     p5NativeFn -- calls --> queueCallback
+
 ```
 
 ## Implementation plans
