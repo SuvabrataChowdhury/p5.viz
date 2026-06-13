@@ -90,15 +90,18 @@ flowchart TB
         draw["draw()"]
         frameCount["frameCount"]
     end
-    subgraph s1["p5.viz Library"]
-        shapeParams["Shape Parameters"]
-        animationParams["Animation Parameters"]
-        dynamicShape["dynamicShape()"]
-        p5Callback["p5Callback()"]
+    subgraph library["p5.viz Library"]
+        subgraph core["core"]
+            shapeParams["Shape Parameters"]
+            animationParams["Animation Parameters"]
+            dynamicShape["dynamicShape()"]
+            p5Callback["p5Callback()"]
+            callbacks(["In Memory store"])
+            queueCallback["queueCallback()"]
+            frame["frame()"]
+        end
+
         shape["Shape"]
-        queueCallback["queueCallback()"]
-        p5Callbacks(["In Memory store"])
-        frame["frame()"]
     end
     shapeParams -- goes into --> dynamicShape
     animationParams -- goes into --> dynamicShape
@@ -106,9 +109,9 @@ flowchart TB
     frameCount -- goes into --> p5Callback & frame
     p5Callback -- draws --> shape
     p5Callback -- goes into --> queueCallback
-    queueCallback -- stores into --> p5Callbacks
+    queueCallback -- stores into --> callbacks
     draw -- calls --> frame
-    frame -- calls all --> p5Callbacks
+    frame -- calls all --> callbacks
     p5NativeFn -- calls --> dynamicShape
     p5NativeFn -- calls --> queueCallback
 ```
@@ -116,7 +119,7 @@ flowchart TB
 ## Implementation plans
 **core:**
 ```ts
-type AnimationParams {
+type AnimationParams = {
     firstFrameCount: number,
     
     // ...
@@ -126,15 +129,14 @@ type DynamicShape = (shapeParams: object, animationParams: AnimationParams) => P
 
 // ...
 
-callbacks: P5Callback[] = [];
+let callbacks: P5Callback[] = [];
 function queueCallback(callback: P5Callback): void {
     callbacks.push(callback);
 }
 
-function frame(currentFrameCount: number): void {
+function frame(p: p5, currentFrameCount: number): void {
     for (callback of callbacks) {
         callback(p, currentFrameCount);
     }
 }
 ```
-
