@@ -1,5 +1,5 @@
 import p5 from 'p5';
-import type { AnimationParams, DynamicShape, P5Callback, ShapeAnimationDraw, ShapeParams } from "../core";
+import type { AnimationParams, DynamicShape, P5Callback, ShapeParams } from "../core";
 
 interface CircleParams extends ShapeParams {
     x: number,
@@ -7,26 +7,28 @@ interface CircleParams extends ShapeParams {
     d: number
 };
 
-const growAnimation: ShapeAnimationDraw<CircleParams> = (p: p5, shapeParams: CircleParams, currentFrame: number) => {
+const growAnimation: AnimationParams<CircleParams>['animate'] = (p: p5, shapeParams: CircleParams, currentFrame: number) => {
     const { x, y, d } = shapeParams;
     p.circle(x, y, Math.min(d, currentFrame));
 }
 
-const drawAnimation: ShapeAnimationDraw<CircleParams> = (p: p5, shapeParams: CircleParams, currentFrame: number) => {
+const drawAnimation: AnimationParams<CircleParams>['animate'] = (p: p5, shapeParams: CircleParams, currentFrame: number) => {
     const { x, y, d } = shapeParams;
-
-    p.arc(x, y, d, d, 0, Math.min( 2 * Math.PI, currentFrame * Math.PI/180));
+    p.arc(x, y, d, d, 0, Math.min(2 * Math.PI, currentFrame * Math.PI / 180));
 }
 
 const defaultCircleAnimation: AnimationParams<CircleParams> = {
-    firstFrameCount: 0,
-    drawShape: (shapeParams) => shapeParams
+    animate: (p: p5, shapeParams: CircleParams) => {
+        const { x, y, d } = shapeParams;
+        p.circle(x, y, d);
+    }
 }
 
 const dynamicCircle: DynamicShape<CircleParams> = (shapeParams: CircleParams, animationParams: AnimationParams<CircleParams> = defaultCircleAnimation): P5Callback => {
+    let firstFrameCount: number | null = null;
     return (p: p5) => {
-        const currentRelativeFrame = p.frameCount - animationParams.firstFrameCount;
-        animationParams.drawShape(p, shapeParams, currentRelativeFrame);
+        if (firstFrameCount === null) firstFrameCount = p.frameCount;
+        animationParams.animate(p, shapeParams, p.frameCount - firstFrameCount);
     }
 }
 

@@ -31,7 +31,8 @@ const sketch = (p: p5) => {
 
     const animation = (toggle) ? drawAnimation : growAnimation;
 
-    const circle = dynamicCircle(circleParams, {firstFrameCount: p.frameCount, drawShape: animation});
+    const circle = dynamicCircle(circleParams, {animate: animation});
+
     queueCallback(circle);
 
     toggle = !toggle;
