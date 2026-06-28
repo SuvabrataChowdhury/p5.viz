@@ -1,11 +1,13 @@
 import p5 from 'p5';
 
 import './style.css';
-import { dynamicCircle, growCircle } from './shapes';
+import { drawAnimation, dynamicCircle, growAnimation } from './shapes';
 import { frame, queueCallback } from './core';
 
 // Define the sketch using a p5 instance parameter
 const sketch = (p: p5) => {
+  let toggle = false;
+
   p.setup = () => {
     p.createCanvas(p.windowWidth, p.windowHeight);
     queueCallback((p) => {
@@ -25,9 +27,14 @@ const sketch = (p: p5) => {
   };
 
   p.mousePressed = () => {
-    const circleParams = {x: p.mouseX, y: p.mouseY, d: p.random(50, 250)};
-    const circle = dynamicCircle( circleParams, {firstFrameCount: p.frameCount, shapeAnimation: growCircle});
+    const circleParams = {x: p.mouseX, y: p.mouseY, d: 50};
+
+    const animation = (toggle) ? drawAnimation : growAnimation;
+
+    const circle = dynamicCircle(circleParams, {firstFrameCount: p.frameCount, drawShape: animation});
     queueCallback(circle);
+
+    toggle = !toggle;
   };
 };
 
