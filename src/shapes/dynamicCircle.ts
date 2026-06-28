@@ -1,5 +1,5 @@
 import p5 from 'p5';
-import type { AnimationParams, DynamicShape, P5Callback, ShapeAnimation, ShapeParams } from "../core";
+import type { AnimationParams, DynamicShape, P5Callback, ShapeParams } from "../core";
 
 interface CircleParams extends ShapeParams {
     x: number,
@@ -7,27 +7,29 @@ interface CircleParams extends ShapeParams {
     d: number
 };
 
-const growCircle: ShapeAnimation<CircleParams> = (shapeParams: CircleParams, currentFrame: number): CircleParams => {
-
-    // const currentRelativeFrame = p.frameCount - animationParams.firstFrameCount;
-
+const growAnimation: AnimationParams<CircleParams>['animate'] = (p: p5, shapeParams: CircleParams, currentFrame: number) => {
     const { x, y, d } = shapeParams;
-
-    return {
-        x,
-        y,
-        d: Math.min(d, currentFrame) 
-    };
+    p.circle(x, y, Math.min(d, currentFrame));
 }
 
-const dynamicCircle: DynamicShape<CircleParams> = (shapeParams: CircleParams, animationParams: AnimationParams<CircleParams>): P5Callback => {
-    return (p: p5) => {
-        const currentRelativeFrame = p.frameCount - animationParams.firstFrameCount;
+const drawAnimation: AnimationParams<CircleParams>['animate'] = (p: p5, shapeParams: CircleParams, currentFrame: number) => {
+    const { x, y, d } = shapeParams;
+    p.arc(x, y, d, d, 0, Math.min(2 * Math.PI, currentFrame * Math.PI / 180));
+}
 
-        const { x, y, d } = animationParams.shapeAnimation(shapeParams, currentRelativeFrame);
-
+const defaultCircleAnimation: AnimationParams<CircleParams> = {
+    animate: (p: p5, shapeParams: CircleParams) => {
+        const { x, y, d } = shapeParams;
         p.circle(x, y, d);
     }
 }
 
-export { dynamicCircle, growCircle, type CircleParams };
+const dynamicCircle: DynamicShape<CircleParams> = (shapeParams: CircleParams, animationParams: AnimationParams<CircleParams> = defaultCircleAnimation): P5Callback => {
+    let firstFrameCount: number | null = null;
+    return (p: p5) => {
+        if (firstFrameCount === null) firstFrameCount = p.frameCount;
+        animationParams.animate(p, shapeParams, p.frameCount - firstFrameCount);
+    }
+}
+
+export { dynamicCircle, growAnimation, drawAnimation,  type CircleParams };
